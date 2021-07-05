@@ -8,76 +8,103 @@ class UserData with ChangeNotifier{
   String password = 'NULL';
   String name = 'NULL';
   String id = 'NULL';
-  int expiresInSec = 0;
+  DateTime expiredate = DateTime.now();
   bool _isLogedIn = false;
   bool isLoading = true;
+  bool isFechingData = true;
   
   UserData(){
-    fetchPrefs();
+    _fetchPrefs();
   }
 
-  fetchPrefs() async{
-    isLoading = true;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    Map<String, dynamic> userData = json.decode(prefs.getString('userData')??'{"error": "Error"}');
-    print(userData);
-    if(!userData.containsKey('error')){
-      await this.signIn(userData['email'], userData['password'], true, nameO: userData['name']);
+  _fetchPrefs() async{
+    List<dynamic> result = await _fromJson();
+    print(result);
+    this.isLoading = false;
+    notifyListeners();
+    if(result[0]){
+      print('data found in shared preferences');
+      if(result[5].isAfter(DateTime.now())){
+        _isLogedIn = true;
+        notifyListeners();
+        print('Expiry data is not crossed yet');
+        bool res = await _fetchData(result[5], result[4]);
+        if(res){
+          print('successfully fetched the data');
+        }
+        else{
+          print('error in fetching data');
+        }
+      }
+      else{
+        print('Expiry data is crossed');
+        loginToSystem(result[2], result[3]);
+      }
     }
     else{
-      isLoading = false;
+      print('No data in shared preferences');
     }
-    notifyListeners();
+  }
+
+  loginToSystem(_email, _password, {isLoginT = true, nameT = 'NULL'}) async{
+    try{
+    print(_email);
+    print(isLoginT);
+    List<dynamic> expAid = await this._logInData(_email, _password, isLoginT);
+    print(expAid);
+    if(expAid[0]){
+      _isLogedIn = true;
+      notifyListeners();
+      print('login successful');
+
+      Uri uri = Uri.parse('https://len-den-app-default-rtdb.asia-southeast1.firebasedatabase.app/${expAid[2]}/userData.json');
+      if(!isLoginT){
+        var jsonData = json.encode({
+        'name': nameT,
+        'email': _email,
+        'password': _password,
+        });
+        await http.put(uri, body: jsonData);
+      }
+
+      bool res = await _fetchData(expAid[1], expAid[2]);
+      if(res){
+        print('successfully fetched the data');
+      }
+      else{
+        print('error in fetching data');
+      }
+      if(!isLoginT){
+        await this.addPeople('Shop', 'Gwalior', '0000000000');
+      }
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.clear();
+      prefs.setString('userData', this._toJSON());
+      }
+      else{
+        print('failed to login');
+        return false;
+      }
+    return true;
+    }
+    catch(e){
+    return false;
+    }
   }
 
   get isLoggedIn{
     return _isLogedIn;
   }
 
-  logIn(){
-    _isLogedIn = true;
-    isLoading = false;
-    notifyListeners();
-  }
-
-  logout() async{
-    this._isLogedIn = false;
-    this.email = 'NULL';
-    this.password = 'NULL';
-    this.name = 'NULL';
-    this.id = 'NULL';
-    this.expiresInSec = 0;
-    this.transactions = [];
-    this.people = [];
-    this.isLoading = false;
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
-    notifyListeners();
-  }
-
-  List<Transaction> transactions = [];
-  List<People> people = [];
-  
-  toJSON(){
-    return json.encode({
-      'email': email,
-      'password': password,
-      'name': name,
-      'id': id,
-      'expiresIn': expiresInSec,
-    });
-  }
-
-  signIn(_email, _password, isSignIn, {String nameO = 'NULL'}) async{
-    if(isSignIn){
+  Future<List<dynamic>> _logInData(_email, _password, _isLogin) async{
+    if(_isLogin){
       print('SignIn');
     }
     else{
       print('SignUp');
     }
     Uri url = Uri.parse('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB1v1hcCQftQf0qjK5RR3iQrD2zJLcrkgM'); 
-    if(!isSignIn){
+    if(!_isLogin){
       url = Uri.parse('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB1v1hcCQftQf0qjK5RR3iQrD2zJLcrkgM');
     }
     try{
@@ -91,72 +118,101 @@ class UserData with ChangeNotifier{
           }
         )
       );
-      var data = json.decode(result.body);
-      print(data);
-      this.id = data['localId'];
-      this.expiresInSec = int.parse(data['expiresIn']);
-      Uri uri = Uri.parse('https://len-den-app-default-rtdb.asia-southeast1.firebasedatabase.app/$id/userData.json');
-      if(!isSignIn){
-        var jsonData = json.encode({
-        'name': nameO,
-        'email': _email,
-        'password': _password,
-        });
-        await http.put(uri, body: jsonData);
-        this.name = nameO;
-      }
-      else{
-        dynamic data = await http.get(uri);
-        var userData = json.decode(data.body);
-        this.name = userData['name'];
-      }
-      this.email = _email;
-      this.password = _password;
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      if(prefs.getString('userData')==null){
-        prefs.setString('userData', this.toJSON());
-      }
-
-      if(isSignIn){
-        await this.fetchData();
-      }
-      else{
-        this.addPeople('Shop', 'Gwalior', '0000000000');
-      }
-
-      this.logIn();
-      return true;
-    }
-    catch(e){
-      print('Eroor');
-      return false;
+      dynamic data = json.decode(result.body);
+      print(data['expiresIn']);
+      print(data['localId']);
+      return [true, DateTime.now().add(Duration(seconds: int.parse(data['expiresIn']))), data['localId']];
+    }catch(e){
+      return [false];
     }
   }
 
-  fetchData() async{
+  logout() async{
+    this._isLogedIn = false;
+    this.email = 'NULL';
+    this.password = 'NULL';
+    this.name = 'NULL';
+    this.id = 'NULL';
+    this.expiredate = DateTime.now();
+    this.transactions = [];
+    this.people = [];
+    this.isLoading = false;
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    notifyListeners();
+  }
+
+  List<Transaction> transactions = [];
+  List<People> people = [];
+  
+  _toJSON(){
+    return json.encode({
+      'email': email,
+      'password': password,
+      'name': name,
+      'id': id,
+      'expiredate': expiredate.toString(),
+    });
+  }
+
+  _fromJson() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Map<String, dynamic> data = json.decode(prefs.getString('userData')??'{"error": "Error"}');
+    print(data);
+    if(!data.containsKey('error')){
+      return [true, data['name'], data['email'], data['password'], data['id'], DateTime.parse(data['expiredate'])];
+    }
+    else{
+      return [false];
+    }
+  }
+
+  _saveData(nameT, emailT, passwordT, idT, expiredateT){
+    this.name = nameT;
+    this.email = emailT;
+    this.password = passwordT;
+    this.id = idT;
+    this.expiredate = expiredateT;
+  }
+
+  _fetchData(_expireDate, _id) async{
     try{
-      Uri uri = Uri.parse('https://len-den-app-default-rtdb.asia-southeast1.firebasedatabase.app/$id.json');
+      this.isFechingData = true;
+      notifyListeners();
+      print(_expireDate);
+      print(_id);
+      Uri uri = Uri.parse('https://len-den-app-default-rtdb.asia-southeast1.firebasedatabase.app/$_id.json');
       dynamic data = await http.get(uri);
       Map<String, dynamic> dData = json.decode(data.body);
-      var fTransactions = dData['transactions'] as Map<String, dynamic>;
-      print(fTransactions);
-      this.transactions.clear();
-      fTransactions.forEach((key, value) {
-        this.transactions.add(Transaction(key, value['amount'], value['isCredit'], value['toOrFromName'], value['toOrFromId'], DateTime.parse(value['dateTime']), value['method'], value['note']));
-      });
-      print(dData);
-      var fPeople = dData['people'] as Map<String, dynamic>;
+      print(dData['userData']);
+
+      var fUserData = dData['userData'];
+      print(fUserData);
+      _saveData(fUserData['name']??'NULL', fUserData['email']??'NULL', fUserData['password']??'NULL', _id, _expireDate);
+
+      if(dData.containsKey('transactions')){
+        var fTransactions = dData['transactions'] as Map<String, dynamic>;
+        print(fTransactions);
+        this.transactions.clear();
+        fTransactions.forEach((key, value) {
+          this.transactions.add(Transaction(key, value['amount'], value['isCredit'], value['toOrFromName'], value['toOrFromId'], DateTime.parse(value['dateTime']), value['method'], value['note']));
+        });
+      }
+      var fPeople = dData['people'];
       print(fPeople);
       this.people.clear();
       fPeople.forEach((key, value) 
       {
         this.people.add(People(key, value['name'], value['address'], value['number'] ));
       });
-
+      isFechingData = false;
+      notifyListeners();
       return true;
     }
     catch(e){
+      isFechingData = false;
+      notifyListeners();
       return false;
     }
   }

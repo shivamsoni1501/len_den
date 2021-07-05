@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Container(
         alignment: Alignment.center,
-        child: (cIndex==0)?HomeScreen():PeopleScreen()
+        child: (user.isFechingData)?(CircularProgressIndicator()):(cIndex==0)?HomeScreen():PeopleScreen()
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: cIndex,

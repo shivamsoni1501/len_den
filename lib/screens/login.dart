@@ -60,14 +60,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       _isLoading = true;
                     });
                     UserData user = Provider.of<UserData>(context, listen: false);
-                    bool result = await user.signIn(_email, _password, _isLogin, nameO: _name);
+                    bool result = await user.loginToSystem(_email, _password, isLoginT: _isLogin, nameT: _name);
                     if(!result){
-                      print('failed to login');
-                      // ScaffoldMessengerState().showSnackBar(SnackBar(content: Text('Failed to Login!, Try Again')));
-                    }
+                      print('failed to login!');
                     setState(() {
                       _isLoading = false;
                     });
+                    }
                   },
                   child: (_isLoading)?Container(padding: const EdgeInsets.all(5),  child: CircularProgressIndicator(color: Colors.white,)):Text(_isLogin?'Login':'Register'),
                 ),
