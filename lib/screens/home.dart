@@ -10,11 +10,13 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserData user = Provider.of<UserData>(context); 
+    UserData user = Provider.of<UserData>(context);
+    List<Transaction> tList = user.transactions;
+    tList.sort((b, a)=> a.dateTime.compareTo(b.dateTime));
     return ListView.builder(
-      itemCount: user.transactions.length,
+      itemCount: tList.length,
       itemBuilder: (context, index){
-        return TTile(user.transactions[index]);
+        return  TTile(tList[index]);   
       }
     );
   }

@@ -12,6 +12,7 @@ void main() {
   runApp(LenDenApp());
 }
 
+
 class LenDenApp extends StatelessWidget {
   const LenDenApp({Key? key}) : super(key: key);
 
@@ -21,8 +22,10 @@ class LenDenApp extends StatelessWidget {
       create: (_) => UserData(),
       child: MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.blueGrey,
+        primaryColor: Colors.blueGrey[800],
       ),
       home: Auth(),
       ),
@@ -54,7 +57,8 @@ class _MyHomePageState extends State<MyHomePage> {
     UserData user = Provider.of<UserData>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Len Den'),
+        backgroundColor: Colors.blueGrey[800],
+        title: Text('LEN-DEN', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5),),
         centerTitle: true,
         actions: [
           IconButton(
@@ -65,6 +69,40 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
+      drawer: SafeArea(
+        child: Drawer(
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                color: Colors.blueGrey[500],
+                height: 100,
+                padding: EdgeInsets.all(10), 
+                child: CircleAvatar(
+                  radius: 30,            
+                  child: Text( 
+                    (user.name=='NULL')?'':user.name.substring(0,1).toUpperCase(),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.account_box),
+                title: Text(user.name, style: TextStyle(color: Colors.blueGrey[700], fontWeight: FontWeight.bold,fontSize: 18)),
+              ),
+              ListTile(
+                leading: Icon(Icons.email_outlined),
+                title: Text(user.email, style: TextStyle(color: Colors.blueGrey[700], fontWeight: FontWeight.bold,fontSize: 18)),
+              ),
+              ListTile(
+                leading: Icon(Icons.password),
+                title: Text(user.password, style: TextStyle(color: Colors.blueGrey[700], fontWeight: FontWeight.bold,fontSize: 18)),
+              ),
+            ],
+          ),
+        ),
+      ),
+
       body: Container(
         alignment: Alignment.center,
         child: (user.isFechingData)?(CircularProgressIndicator()):(cIndex==0)?HomeScreen():PeopleScreen()
@@ -75,6 +113,8 @@ class _MyHomePageState extends State<MyHomePage> {
           cIndex = val;
           setState(() {});
         },
+        unselectedItemColor: Colors.blueGrey[400],
+        selectedItemColor: Colors.blueGrey[800],
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -90,12 +130,13 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blueGrey[800],
         child: Icon(Icons.add),
         onPressed: (){
           showModalBottomSheet(
             context: context,
+            backgroundColor: Colors.transparent,
             isScrollControlled: true,
-            isDismissible: true,
             builder: (context)=> (cIndex==0)?(AddTrx(user)):(AddPepl(user)),
           );        
         },

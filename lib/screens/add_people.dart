@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:len_den/model/user_data.dart';
 
 
@@ -19,58 +20,109 @@ class _AddPeplState extends State<AddPepl> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 500,
-      padding: EdgeInsets.all(12),
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-      width: 50,
-      height: 5,
+    return  Container(
       decoration: BoxDecoration(
-        color: Colors.blue,
-        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,        
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-            ),
-            SizedBox(height: 12),
-            TextField(
-      decoration: InputDecoration(
-          labelText: 'Name',
-          hintText: 'FirstName LastName',
+      padding: EdgeInsets.all(15),
+      child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.max,
+    children: [
+      SizedBox(height: 30),
+      Align(
+        alignment: Alignment.center,
+              child: Container(
+          width: 70,
+          height: 5,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.blueGrey[700], ),
         ),
-      onChanged: (val) {
-        print(val);
-        _name = val;
-      },
-            ),
-            TextField(
+      ),
+      SizedBox(height: 10),
+      Container(
+        alignment: Alignment.center,
+        child: Text('ADD VENDER', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5, fontSize: 20),)),
+      Divider(color: Colors.blueGrey[700], height: 20, thickness: 2,),
+    SizedBox(height: 15),
+    Text('NAME of Vender?', style: TextStyle(color: Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 14),),
+    TextField(
+      keyboardType: TextInputType.name,
+      style: TextStyle(
+        fontWeight: FontWeight.bold, 
+        wordSpacing: 2, 
+        fontSize: 18,
+        color: Colors.blueGrey[700],
+      ),
       decoration: InputDecoration(
-          labelText: 'Address',
-          hintText: 'House No. XX, XYZ Colony, City',
-        ),
+        hintText: 'Give a Name',
+        hintStyle: TextStyle(wordSpacing: 2, color: Colors.blueGrey[100], fontWeight: FontWeight.bold),
+      ),              
+      onChanged: (val) => _name = val,
+      ),
+      SizedBox(height: 15),
+    Text('ADDRESS of Vender?', style: TextStyle(color: Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 14),),
+    TextField(
+      keyboardType: TextInputType.streetAddress,
+      style: TextStyle(
+        fontWeight: FontWeight.bold, 
+        wordSpacing: 2, 
+        fontSize: 18,
+        color: Colors.blueGrey[700],
+      ),
+      decoration: InputDecoration(
+        hintText: 'Add an Address',
+        hintStyle: TextStyle(wordSpacing: 2, color: Colors.blueGrey[100], fontWeight: FontWeight.bold),
+      ),              
       onChanged: (val) => _address = val,
-            ),
-            TextField(
+      ),
+    SizedBox(height: 15),
+
+    Text('NUMBER of Vender?', style: TextStyle(color: Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 14),),
+    TextField(
       keyboardType: TextInputType.phone,
+      style: TextStyle(
+        fontWeight: FontWeight.bold, 
+        wordSpacing: 2, 
+        fontSize: 18,
+        color: Colors.blueGrey[700],
+      ),
       decoration: InputDecoration(
-          labelText: 'Number',
-          hintText: 'XXXXXXXXXX',
-        ),
-      onChanged: (val) => _number = val,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-      onPressed: () async{
+        hintText: 'Give a Number',
+        hintStyle: TextStyle(wordSpacing: 2, color: Colors.blueGrey[100], fontWeight: FontWeight.bold),
+      ),              
+      onChanged: (val) => _name = val,
+      ),
+      SizedBox(height: 20),
+
+      Center(
+      child: GestureDetector(
+        onTap: () async{
         print(_name);
-        await widget.user.addPeople(_name, _address, _number);
-        Navigator.pop(context);
-      }, 
-      child: Text('ADD')),
-            SizedBox(height: 20),
-          ],
+        widget.user.addPeople(_name, _address, _number);
+        Navigator.pop(context);                  }, 
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 20, 
+            vertical: 5
+          ), 
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5), 
+            color: Colors.blueGrey[700]
+          ), 
+          child: Text(
+            'DONE', 
+            style: TextStyle(
+              color: Colors.white, 
+              fontWeight: FontWeight.bold
+            ),
+          ),
         ),
-    );
+      ),
+    ),
+    SizedBox(height: 200,),
+    ],
+        ),
+      );
   }
 }

@@ -11,7 +11,35 @@ class PeopleScreen extends StatelessWidget {
     return ListView.builder(
       itemCount: user.people.length,
       itemBuilder: (context, index){
-        return UTile(user.people[index], index);
+        return Dismissible(
+          key: ValueKey(user.people[index].id),
+          background: Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            color: Colors.blueGrey[700],
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Icon(Icons.delete_forever, color: Colors.white,),
+                Icon(Icons.delete_forever, color: Colors.white,),
+              ],
+            ),
+          ),
+          confirmDismiss: (dir){
+            return showDialog(
+              context: context, 
+              builder: (context)=>AlertDialog(
+                title: Text('Do you want to delete?'), 
+                actions: [
+                  ElevatedButton(onPressed: (){Navigator.pop(context, true);}, child: Text('Yes'),),
+                  ElevatedButton(onPressed: (){Navigator.pop(context, false);}, child: Text('No'),),
+                ],
+              ),
+            );
+          },
+          onDismissed: (dir){
+            user.deletePeople(user.people[index].id);
+          },
+          child: UTile(user.people[index], index));
       }
     );
   }
@@ -25,7 +53,7 @@ class UTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
+       onTap: (){
         Navigator.push(
           context, 
           MaterialPageRoute(
@@ -33,17 +61,36 @@ class UTile extends StatelessWidget {
           ),
         );
       },
-      child: ListTile(
-        title: Text(people.name.toUpperCase()),
-        leading: CircleAvatar(
-          child: Text(people.name[0].toUpperCase()),
+          child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
         ),
-        contentPadding: const EdgeInsets.all(5),
-        horizontalTitleGap: 10,
-        minLeadingWidth: 70,
-        minVerticalPadding: 10,
-        subtitle: Text(people.address),
+        height: 70,
+        child: Row(
+          children: [
+            Container(
+                alignment: Alignment.center,
+                width: 60,
+                child: CircleAvatar(
+          child: Text(people.name[0].toUpperCase()),
+        ),),
+            Expanded(
+              flex: 3,
+              child: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                  Text(people.name.toUpperCase(), overflow: TextOverflow.clip, style: TextStyle(fontSize: 16, color: Colors.blueGrey[700], fontWeight: FontWeight.bold),),
+                    Text(people.address, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle( fontSize: 12, color: Colors.blueGrey[400], fontWeight: FontWeight.bold),),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
-  }
+     }
 }

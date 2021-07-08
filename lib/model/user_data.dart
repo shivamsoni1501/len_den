@@ -10,9 +10,23 @@ class UserData with ChangeNotifier{
   String id = 'NULL';
   DateTime expiredate = DateTime.now();
   bool _isLogedIn = false;
+
+  get isLoggedIn{
+    return _isLogedIn;
+  }
+  
+  List<Transaction> transactions = [];
+  List<People> people = [];
+  List<String> methods = [
+    'Cash',
+    'Credit Card',
+    'Debit Card',
+    'UPI'
+  ];
+
   bool isLoading = true;
   bool isFechingData = true;
-  
+
   UserData(){
     _fetchPrefs();
   }
@@ -92,10 +106,6 @@ class UserData with ChangeNotifier{
     }
   }
 
-  get isLoggedIn{
-    return _isLogedIn;
-  }
-
   Future<List<dynamic>> _logInData(_email, _password, _isLogin) async{
     if(_isLogin){
       print('SignIn');
@@ -142,9 +152,6 @@ class UserData with ChangeNotifier{
     prefs.clear();
     notifyListeners();
   }
-
-  List<Transaction> transactions = [];
-  List<People> people = [];
   
   _toJSON(){
     return json.encode({
@@ -196,13 +203,14 @@ class UserData with ChangeNotifier{
         print(fTransactions);
         this.transactions.clear();
         fTransactions.forEach((key, value) {
-          this.transactions.add(Transaction(key, value['amount'], value['isCredit'], value['toOrFromName'], value['toOrFromId'], DateTime.parse(value['dateTime']), value['method'], value['note']));
+          this.transactions.add(Transaction(key, value['amount'], value['isCredit'], value['toOrFromName'], value['toOrFromId'], DateTime.parse(value['dateTime']), value['method'], value['note'], value['isForInterest']));
         });
       }
+
       var fPeople = dData['people'];
       print(fPeople);
       this.people.clear();
-      fPeople.forEach((key, value) 
+      fPeople.forEach((key, value)
       {
         this.people.add(People(key, value['name'], value['address'], value['number'] ));
       });
@@ -243,10 +251,9 @@ class UserData with ChangeNotifier{
     notifyListeners();
   }
 
-
-  addTransaction(amount, toOrFromName, toOrFromId, isCredit, dateTime, note, method) async{
+  addTransaction(amount, toOrFromName, toOrFromId, isCredit, dateTime, note, method, {isInterest = false}) async{
     print('adding transaction');
-    Uri uri = Uri.parse('https://len-den-app-default-rtdb.asia-southeast1.firebasedatabase.app/$id/transactions.json');
+    Uri uri = Uri.parse('https://len-den-app-default-rtdb.asia-southeast1.firebasedatabase.app/${this.id}/transactions.json');
     dynamic data = await http.post(
       uri,
       body: json.encode(
@@ -258,6 +265,7 @@ class UserData with ChangeNotifier{
           'dateTime': dateTime.toString(),
           'method': method,
           'note': note,
+          'isForInterest': isInterest,
         }
       )
     );
@@ -269,10 +277,34 @@ class UserData with ChangeNotifier{
       toOrFromId,
       dateTime,
       method,
-      note
+      note,
+      isInterest
     ));
     notifyListeners();
   }
+
+deleteTranaction(String _id) async{
+  print('deleting transaction');
+    Uri uri = Uri.parse('https://len-den-app-default-rtdb.asia-southeast1.firebasedatabase.app/${this.id}/transactions/$_id.json');
+    dynamic data = await http.delete(
+      uri,
+    );
+    print(data);
+    print('deleted');
+    this.transactions.removeWhere((element) => element.id==_id);
+  }
+
+  deletePeople(String _id) async{
+    print('deleting People');
+    Uri uri = Uri.parse('https://len-den-app-default-rtdb.asia-southeast1.firebasedatabase.app/${this.id}/people/$_id.json');
+    dynamic data = await http.delete(
+      uri,
+    );
+    print(data);
+    print('deleted');
+    this.people.removeWhere((element) => element.id==_id);
+  }
+
 }
 
 class People {
@@ -289,8 +321,9 @@ class Transaction{
   String toOrFromId;
   int amount;
   bool isCredit;
+  bool isForInterest;
   DateTime dateTime;
   String note;
   String method;
-  Transaction(this.id, this.amount, this.isCredit, this.toOrFromName, this.toOrFromId, this.dateTime, this.method, this.note);
+  Transaction(this.id, this.amount, this.isCredit, this.toOrFromName, this.toOrFromId, this.dateTime, this.method, this.note, this.isForInterest);
 }
