@@ -34,9 +34,10 @@ class UserData with ChangeNotifier{
   _fetchPrefs() async{
     List<dynamic> result = await _fromJson();
     print(result);
-    this.isLoading = false;
-    notifyListeners();
     if(result[0]){
+      this._isLogedIn = true;
+      this.isLoading = false;
+      notifyListeners();
       print('data found in shared preferences');
       if(result[5].isAfter(DateTime.now())){
         _isLogedIn = true;
@@ -57,6 +58,8 @@ class UserData with ChangeNotifier{
     }
     else{
       print('No data in shared preferences');
+      this.isLoading = false;
+      notifyListeners();
     }
   }
 
