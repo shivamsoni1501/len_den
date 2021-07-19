@@ -81,65 +81,63 @@ class _AddTrxState extends State<AddTrx> {
         child: Text('ADD TRANACTION', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5, fontSize: 20),)),
       Divider(color: Colors.blueGrey[700], height: 20, thickness: 2,),
       SizedBox(height: 10),
-
       FittedBox(
-                        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('This is an  ', style: TextStyle(color: Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 14),),
-            GestureDetector(
-              onTap: (){
-                setState(() {
-                  _isCredit = false;
-                });
-              },
-                                  child: Column(
-                mainAxisSize: MainAxisSize.min,
-               children: [
-                Container( width: 5, height: 5, decoration: BoxDecoration(color: (!_isCredit)?Colors.red:Colors.blueGrey[200],borderRadius: BorderRadius.circular(5))),
-                Text('EXPENSE', style: TextStyle(color: (!_isCredit)?Colors.blueGrey[700]:Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 18),),
-               ]
-              ),
-            ),
-            SizedBox(width: 5),
-            Text('Or', style: TextStyle(color: Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 14),),
-            SizedBox(width: 5),
-            GestureDetector(
-              onTap: (){
-                setState(() {
-                  _isCredit = true;
-                });
-              },
-                                  child: Column(
+        child: Text('This is an', style: TextStyle(color: Colors.blueGrey[500], fontWeight: FontWeight.bold,fontSize: 14),),
+      ),
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          GestureDetector(
+            onTap: (){
+              setState(() {
+                _isCredit = false;
+              });
+            },
+            child: Column(
               mainAxisSize: MainAxisSize.min,
-               children: [
+              children: [
+              Container( width: 5, height: 5, decoration: BoxDecoration(color: (!_isCredit)?Colors.red:Colors.blueGrey[200],borderRadius: BorderRadius.circular(5))),
+              Text('EXPENSE', style: TextStyle(color: (!_isCredit)?Colors.blueGrey[700]:Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 18),),
+              ]
+            ),
+          ),
+          SizedBox(width: 5),
+          Text('Or', style: TextStyle(color: Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 14),),
+          SizedBox(width: 5),
+          GestureDetector(
+            onTap: (){
+              setState(() {
+                _isCredit = true;
+              });
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+                children: [
                 Container( width: 5, height: 5, decoration: BoxDecoration(color: (_isCredit)?Colors.green:Colors.blueGrey[200],borderRadius: BorderRadius.circular(5))),
                 Text('INCOME', style: TextStyle(color: (_isCredit)?Colors.blueGrey[700]:Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 18),),
-               ]
+                ]
               ),
-            ),            
-            Text('  ?', style: TextStyle(color: Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 14),),
-          ],
-        ),
+          ),
+          Text(' ?', style: TextStyle(color: Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 14),),
+        ],
       ),
-    SizedBox(height: 15),
+      SizedBox(height: 15),
+      Text('Is it a Regular Payment?', style: TextStyle(color: Colors.blueGrey[500], fontWeight: FontWeight.bold,fontSize: 14),),
       FittedBox(
         child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Is it for Interest ?  ', style: TextStyle(color: Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 14),),
           GestureDetector(
             onTap: (){
               setState(() {
-                _isForInterest = true;
+                _isForInterest = false;
               });
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,
              children: [
-              Text('YES', style: TextStyle(color: (_isForInterest)?Colors.blueGrey[700]:Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 18),),
+              Text('YES', style: TextStyle(color: (!_isForInterest)?Colors.blueGrey[700]:Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 18),),
              ]
             ),
           ),
@@ -149,60 +147,68 @@ class _AddTrxState extends State<AddTrx> {
           GestureDetector(
             onTap: (){
               setState(() {
-                _isForInterest = false;
+                _isForInterest = true;
               });
             },
             child: Column(
             mainAxisSize: MainAxisSize.min,
              children: [
-              Text('NO', style: TextStyle(color: (!_isForInterest)?Colors.blueGrey[700]:Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 18),),
+              Text('NO', style: TextStyle(color: (_isForInterest)?Colors.blueGrey[700]:Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 18),),
              ]
             ),
-          ),            
-          Text('  ?', style: TextStyle(color: Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 14),),
+          ),        
         ],
       ),
     ),
     SizedBox(height: 15),
-    Text('HOW much is your payment ?', style: TextStyle(color: Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 14),),
+    Text('HOW much is the payment ?', style: TextStyle(color: Colors.blueGrey[500], fontWeight: FontWeight.bold,fontSize: 14),),
     TextField(
       keyboardType: TextInputType.number,
       style: TextStyle(
-        fontWeight: FontWeight.bold, 
+        fontWeight: FontWeight.bold,
         wordSpacing: 2, 
         fontSize: 18,
         color: Colors.blueGrey[700],
       ),
-      selectionHeightStyle: BoxHeightStyle.includeLineSpacingBottom,
       decoration: InputDecoration(
+        border: InputBorder.none,
+        contentPadding: EdgeInsets.all(0),
         prefixText: '₹',
+        prefixStyle: TextStyle(
+        fontWeight: FontWeight.bold,
+        wordSpacing: 2, 
+        fontSize: 18,
+        color: Colors.blueGrey[700],
+        ),
         hintText: '00',
-        hintStyle: TextStyle(wordSpacing: 2, color: Colors.blueGrey[100], fontWeight: FontWeight.bold),
-      ),              
+        hintStyle: TextStyle(wordSpacing: 2, color: Colors.blueGrey[200], fontWeight: FontWeight.bold),
+      ),
       onChanged: (val) => _amount = int.parse(val),
       ),
-    SizedBox(height: 15),
-    Text('On what you spent for ?', style: TextStyle(color: Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 14),),  
+    // SizedBox(height: 0),
+    Text('NOTE', style: TextStyle(color: Colors.blueGrey[500], fontWeight: FontWeight.bold,fontSize: 14),),  
     TextField(
       keyboardType: TextInputType.text,
       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, wordSpacing: 2, color: Colors.blueGrey[700]),
+      
       decoration: InputDecoration(
-        prefixText: ' ',
+        border: InputBorder.none,
+        contentPadding: EdgeInsets.all(0),
+        // prefixText: '',
           hintText: 'Give a note',
-          hintStyle: TextStyle(wordSpacing: 2, color: Colors.blueGrey[100], fontWeight: FontWeight.bold),
+          hintStyle: TextStyle(wordSpacing: 2, color: Colors.blueGrey[200], fontWeight: FontWeight.bold),
         ),              
       onChanged: (val) => _note = val,
     ),
-    SizedBox(height: 15),
-    Text('WHERE you spend it ?', style: TextStyle(color: Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 14),),
+    // SizedBox(height: 15),
+    Text('WHERE you spend it ?', style: TextStyle(color: Colors.blueGrey[500], fontWeight: FontWeight.bold,fontSize: 14),),
     PopupMenuButton(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(widget.user.people[_selectedP].name, style: TextStyle(color: Colors.blueGrey[700], fontWeight: FontWeight.bold,fontSize: 18),),
-          Text(widget.user.people[_selectedP].address, style: TextStyle(color: Colors.blueGrey[400], fontWeight: FontWeight.bold,fontSize: 14),),
-          
+          Text(widget.user.people[_selectedP].address, style: TextStyle(color: Colors.blueGrey[300], fontWeight: FontWeight.bold,fontSize: 14),),
         ]
       ),
       itemBuilder: (BuildContext bc) {
@@ -221,7 +227,7 @@ class _AddTrxState extends State<AddTrx> {
       },
     ),
     SizedBox(height: 15),
-    Text('HOW do you spend it ?', style: TextStyle(color: Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 14),),
+    Text('HOW do you spend it ?', style: TextStyle(color: Colors.blueGrey[500], fontWeight: FontWeight.bold,fontSize: 14),),
     PopupMenuButton(
       child: 
           Text(_selectedMethod, style: TextStyle(color: Colors.blueGrey[700], fontWeight: FontWeight.bold,fontSize: 18),),
@@ -242,7 +248,7 @@ class _AddTrxState extends State<AddTrx> {
     ),
     SizedBox(height: 15),
 
-    Text('WHEN do you spend it ?', style: TextStyle(color: Colors.blueGrey[200], fontWeight: FontWeight.bold,fontSize: 14),),
+    Text('WHEN do you spend it ?', style: TextStyle(color: Colors.blueGrey[500], fontWeight: FontWeight.bold,fontSize: 14),),
     GestureDetector(
       onTap: (){
         showDatePicker(

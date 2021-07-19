@@ -91,7 +91,7 @@ class _AddPeplState extends State<AddPepl> {
         hintText: 'Give a Number',
         hintStyle: TextStyle(wordSpacing: 2, color: Colors.blueGrey[100], fontWeight: FontWeight.bold),
       ),              
-      onChanged: (val) => _name = val,
+      onChanged: (val) => _number = val,
       ),
       SizedBox(height: 20),
 

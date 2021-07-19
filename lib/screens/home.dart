@@ -60,11 +60,15 @@ class HomeScreen extends StatelessWidget {
       empty = true;
     }
     print(totalMap);
-    return (empty)? Text('NOTHING to show!, try add some.'):ListView.builder(
-      itemCount: tList.length,
-      itemBuilder: (context, index){
-        return TTile(tList[index], isFirst: totalMap.containsKey(index), data: totalMap[index]??[]);
-      }
+    return
+    (empty)?
+      Text('No Transactions Yet!!\nTry Add Some.', style: TextStyle(fontSize: 16, color: Colors.blueGrey[400], fontWeight: FontWeight.bold), textAlign: TextAlign.center,):
+      ListView.builder(
+        physics: BouncingScrollPhysics(),
+        itemCount: tList.length,
+        itemBuilder: (context, index){
+          return TTile(tList[index], isFirst: totalMap.containsKey(index), data: totalMap[index]??[]);
+        }
     );
   }
 }

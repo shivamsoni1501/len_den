@@ -33,18 +33,31 @@ class TTile extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          SizedBox(height: 10),
           if(isFirst) SizedBox(
-            height: 25,
+            height: 30,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('₹',style: TextStyle(fontSize: 20, color:Colors.red, fontWeight: FontWeight.bold), ),
-                FittedBox(child: Text('${data[0]}',style: TextStyle(fontSize: 20, color: Colors.blueGrey[700], fontWeight: FontWeight.bold), )),
-                Expanded(child: SizedBox()),
-                FittedBox(child: Text('$monthS, ${data[1]}', style: TextStyle(fontSize: 16, color: Colors.blueGrey[700], fontWeight: FontWeight.bold),)),
-                Expanded(child: SizedBox()),
-                Text('₹',style: TextStyle(fontSize: 20, color:Colors.green, fontWeight: FontWeight.bold), ),
-                FittedBox(child: Text('${data[2]}',style: TextStyle(fontSize: 20, color: Colors.blueGrey[700], fontWeight: FontWeight.bold), )),
+                Expanded(
+                    child: Row(
+                    children: [                    
+                      FittedBox(child: Text('₹',style: TextStyle(fontSize: 22, color:Colors.red, fontWeight: FontWeight.bold), )),
+                      FittedBox(child: Text('${data[0]}',style: TextStyle(fontSize: 22, color: Colors.blueGrey[700], fontWeight: FontWeight.bold), )),
+                    ],
+                  ),
+                ),
+                FittedBox(child: Text('$monthS, ${data[1]}',textAlign: TextAlign.center,  style: TextStyle(fontSize: 16, color: Colors.blueGrey[500], fontWeight: FontWeight.bold),)),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [                    
+                      FittedBox(child: Text('₹',style: TextStyle(fontSize: 22, color:Colors.green, fontWeight: FontWeight.bold), )),
+                      FittedBox(child: Text('${data[2]}',style: TextStyle(fontSize: 22, color: Colors.blueGrey[700], fontWeight: FontWeight.bold), )),
+                    ],
+                  ),
+                ),
               ]
             ),
           ),

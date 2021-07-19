@@ -59,6 +59,8 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Colors.blueGrey[800],
         title: Text('LEN-DEN', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5),),
+        elevation: 10,
+        shadowColor: Colors.blueGrey[700],
         centerTitle: true,
         actions: [
           IconButton(
@@ -108,13 +110,15 @@ class _MyHomePageState extends State<MyHomePage> {
         child: (user.isFechingData)?(CircularProgressIndicator()):(cIndex==0)?HomeScreen():PeopleScreen()
       ),
       bottomNavigationBar: BottomNavigationBar(
+        elevation: 10,
+        backgroundColor: Colors.blueGrey[800],
         currentIndex: cIndex,
         onTap: (val){
           cIndex = val;
           setState(() {});
         },
         unselectedItemColor: Colors.blueGrey[400],
-        selectedItemColor: Colors.blueGrey[800],
+        selectedItemColor: Colors.blueGrey[50],
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

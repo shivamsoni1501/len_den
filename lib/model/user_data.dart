@@ -299,6 +299,11 @@ deleteTranaction(String _id) async{
 
   deletePeople(String _id) async{
     print('deleting People');
+    this.transactions.where((element) =>
+      element.toOrFromId == _id
+    ).forEach((element) async{ 
+      await this.deleteTranaction(element.id);
+    });
     Uri uri = Uri.parse('https://len-den-app-default-rtdb.asia-southeast1.firebasedatabase.app/${this.id}/people/$_id.json');
     dynamic data = await http.delete(
       uri,
@@ -306,8 +311,8 @@ deleteTranaction(String _id) async{
     print(data);
     print('deleted');
     this.people.removeWhere((element) => element.id==_id);
+    notifyListeners();
   }
-
 }
 
 class People {
