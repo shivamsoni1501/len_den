@@ -300,7 +300,7 @@ class _AddTrxState extends State<AddTrx> {
             ),
             // SizedBox(height: 15),
             Text(
-              'WHERE you spend it ?',
+              _isCredit ? 'WHERE do you earn it?' : 'WHERE do you spend it ?',
               style: TextStyle(
                   color: Colors.blueGrey[500],
                   fontWeight: FontWeight.bold,
@@ -342,7 +342,7 @@ class _AddTrxState extends State<AddTrx> {
             ),
             SizedBox(height: 15),
             Text(
-              'HOW do you spend it ?',
+              _isCredit ? 'HOW do you earn it?' : 'HOW do you spend it ?',
               style: TextStyle(
                   color: Colors.blueGrey[500],
                   fontWeight: FontWeight.bold,
@@ -373,7 +373,7 @@ class _AddTrxState extends State<AddTrx> {
             SizedBox(height: 15),
 
             Text(
-              'WHEN do you spend it ?',
+              _isCredit ? 'WHEN do you earn it?' : 'WHEN do you spend it ?',
               style: TextStyle(
                   color: Colors.blueGrey[500],
                   fontWeight: FontWeight.bold,

@@ -45,7 +45,7 @@ class _AddPeplState extends State<AddPepl> {
           Container(
               alignment: Alignment.center,
               child: Text(
-                'ADD PERSON',
+                'ADD VENDER',
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.5,
@@ -59,7 +59,7 @@ class _AddPeplState extends State<AddPepl> {
           SizedBox(height: 15),
           FittedBox(
             child: Text(
-              'NAME of Person',
+              'NAME',
               style: TextStyle(
                   color: Colors.blueGrey[500],
                   fontWeight: FontWeight.bold,
@@ -87,7 +87,7 @@ class _AddPeplState extends State<AddPepl> {
           ),
           SizedBox(height: 15),
           Text(
-            'ADDRESS of Person',
+            'ADDRESS',
             style: TextStyle(
                 color: Colors.blueGrey[500],
                 fontWeight: FontWeight.bold,
@@ -114,7 +114,7 @@ class _AddPeplState extends State<AddPepl> {
           ),
           SizedBox(height: 15),
           Text(
-            'NUMBER of Person',
+            'NUMBER',
             style: TextStyle(
                 color: Colors.blueGrey[500],
                 fontWeight: FontWeight.bold,

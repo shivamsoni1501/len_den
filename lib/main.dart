@@ -20,7 +20,7 @@ class LenDenApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => UserData(),
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Len_Den_App',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blueGrey,
@@ -80,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               Container(
                 width: double.infinity,
-                color: Colors.blueGrey[500],
+                color: Colors.blueGrey[800],
                 height: 100,
                 padding: EdgeInsets.all(10),
                 child: CircleAvatar(
@@ -94,7 +94,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.account_box),
+                leading: Icon(Icons.account_circle,
+                    size: 32, color: Colors.blueGrey[800]),
                 title: Text(user.name,
                     style: TextStyle(
                         color: Colors.blueGrey[700],
@@ -102,7 +103,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         fontSize: 18)),
               ),
               ListTile(
-                leading: Icon(Icons.email_outlined),
+                leading: Icon(Icons.alternate_email_sharp,
+                    size: 32, color: Colors.blueGrey[800]),
                 title: Text(user.email,
                     style: TextStyle(
                         color: Colors.blueGrey[700],
@@ -110,7 +112,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         fontSize: 18)),
               ),
               ListTile(
-                leading: Icon(Icons.password),
+                leading: Icon(Icons.health_and_safety_outlined,
+                    size: 32, color: Colors.blueGrey[800]),
                 title: Text(user.password,
                     style: TextStyle(
                         color: Colors.blueGrey[700],
@@ -140,14 +143,14 @@ class _MyHomePageState extends State<MyHomePage> {
         selectedItemColor: Colors.blueGrey[50],
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            activeIcon: Icon(Icons.home_filled),
-            label: 'Home',
+            icon: Icon(Icons.my_library_books_rounded),
+            activeIcon: Icon(Icons.my_library_books_outlined),
+            label: 'Transactions',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
             activeIcon: Icon(Icons.people_alt),
-            label: 'People',
+            label: 'Vender',
           ),
         ],
       ),
@@ -156,13 +159,21 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.blueGrey[800],
         child: Icon(Icons.add),
         onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            backgroundColor: Colors.transparent,
-            isScrollControlled: true,
-            builder: (context) =>
-                (cIndex == 0) ? (AddTrx(user)) : (AddPepl(user)),
-          );
+          if ((cIndex == 0) && (user.people.length == 0)) {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('First add venders!')));
+          } else
+            showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.transparent,
+                isScrollControlled: true,
+                builder: (context) {
+                  if (cIndex == 0)
+                    return (AddTrx(user));
+                  else
+                    return (AddPepl(user));
+                });
         },
       ),
     );

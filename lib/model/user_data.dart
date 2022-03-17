@@ -28,7 +28,6 @@ class UserData with ChangeNotifier {
 
   _fetchPrefs() async {
     List<dynamic> result = await _fromJson();
-    // print(result);
     if (result[0]) {
       this._isLogedIn = true;
       this.isLoading = false;
