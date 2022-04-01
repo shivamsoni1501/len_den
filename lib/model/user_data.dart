@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'api_key.dart';
+
 class UserData with ChangeNotifier {
   String email = 'NULL';
   String password = 'NULL';
@@ -56,17 +58,13 @@ class UserData with ChangeNotifier {
 
   loginToSystem(_email, _password, {isLoginT = true, nameT = 'NULL'}) async {
     try {
-      // print(_email);
-      // print(isLoginT);
       List<dynamic> expAid = await this._logInData(_email, _password, isLoginT);
-      print(expAid);
       if (expAid[0]) {
         _isLogedIn = true;
         notifyListeners();
         print('login successful');
 
-        Uri uri = Uri.parse(
-            'https://len-den-app-default-rtdb.asia-southeast1.firebasedatabase.app/${expAid[2]}/userData.json');
+        Uri uri = Uri.parse('$BASE_URL/${expAid[2]}/userData.json');
         if (!isLoginT) {
           var jsonData = json.encode({
             'name': nameT,
@@ -77,19 +75,19 @@ class UserData with ChangeNotifier {
         }
 
         bool res = await _fetchData(expAid[1], expAid[2]);
-        if (res) {
-          print('successfully fetched the data');
-        } else {
-          print('error in fetching data');
-        }
+        // if (res) {
+        //   print('successfully fetched the data');
+        // } else {
+        //   print('error in fetching data');
+        // }
         if (!isLoginT) {
-          await this.addPeople('Shop', 'Gwalior', '0000000000');
+          await this.addPeople('Shop', 'India', '0000000000');
         }
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.clear();
         prefs.setString('userData', this._toJSON());
       } else {
-        print('failed to login');
+        // print('failed to login');
         return false;
       }
       return true;
@@ -105,10 +103,10 @@ class UserData with ChangeNotifier {
       print('SignUp');
     }
     Uri url = Uri.parse(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB1v1hcCQftQf0qjK5RR3iQrD2zJLcrkgM');
+        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$API_KEY');
     if (!_isLogin) {
       url = Uri.parse(
-          'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB1v1hcCQftQf0qjK5RR3iQrD2zJLcrkgM');
+          'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=$API_KEY');
     }
     try {
       dynamic result = await http.post(url,
@@ -189,8 +187,7 @@ class UserData with ChangeNotifier {
       notifyListeners();
       // print(_expireDate);
       // print(_id);
-      Uri uri = Uri.parse(
-          'https://len-den-app-default-rtdb.asia-southeast1.firebasedatabase.app/$_id.json');
+      Uri uri = Uri.parse('$BASE_URL/$_id.json');
       dynamic data = await http.get(uri);
       Map<String, dynamic> dData = json.decode(data.body);
       // print(dData['userData']);
@@ -239,8 +236,7 @@ class UserData with ChangeNotifier {
   addPeople(String nameA, String addressA, String numberA) async {
     print('adding people');
     print(nameA);
-    Uri uri = Uri.parse(
-        'https://len-den-app-default-rtdb.asia-southeast1.firebasedatabase.app/$id/people.json');
+    Uri uri = Uri.parse('$BASE_URL/$id/people.json');
     dynamic data = await http.post(uri,
         body: json.encode({
           'name': nameA,
@@ -257,8 +253,7 @@ class UserData with ChangeNotifier {
       amount, toOrFromName, toOrFromId, isCredit, dateTime, note, method,
       {isInterest = false}) async {
     print('adding transaction');
-    Uri uri = Uri.parse(
-        'https://len-den-app-default-rtdb.asia-southeast1.firebasedatabase.app/${this.id}/transactions.json');
+    Uri uri = Uri.parse('$BASE_URL/${this.id}/transactions.json');
     dynamic data = await http.post(uri,
         body: json.encode({
           'amount': amount,
@@ -285,8 +280,7 @@ class UserData with ChangeNotifier {
 
   deleteTranaction(String _id) async {
     print('deleting transaction');
-    Uri uri = Uri.parse(
-        'https://len-den-app-default-rtdb.asia-southeast1.firebasedatabase.app/${this.id}/transactions/$_id.json');
+    Uri uri = Uri.parse('$BASE_URL/${this.id}/transactions/$_id.json');
     dynamic data = await http.delete(
       uri,
     );
@@ -303,8 +297,7 @@ class UserData with ChangeNotifier {
         .forEach((element) async {
       await this.deleteTranaction(element.id);
     });
-    Uri uri = Uri.parse(
-        'https://len-den-app-default-rtdb.asia-southeast1.firebasedatabase.app/${this.id}/people/$_id.json');
+    Uri uri = Uri.parse('$BASE_URL/${this.id}/people/$_id.json');
     dynamic data = await http.delete(
       uri,
     );

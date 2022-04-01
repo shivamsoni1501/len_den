@@ -2,7 +2,7 @@
     package="com.example.len_den">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="len_den"
+        android:label="Len Den"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

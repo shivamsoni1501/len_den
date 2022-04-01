@@ -1,8 +1,8 @@
 name: len_den
-description: A new Flutter project.
+description: A usefull Application for daily uses. Users can use this application to keep tract of their expenses and income.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -17,9 +17,10 @@ dependencies:
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
-  flutter_launcher_icons: ^0.9.2
+  # flutter_launcher_icons: ^0.9.2
   flutter_test:
     sdk: flutter
+  # rename: ^2.0.1
 
 flutter_icons:
   image_path: "image/logo1.png"

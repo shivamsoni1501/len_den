@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../model/user_data.dart';
@@ -24,8 +25,9 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('LOGIN'),
+        title: Text(_isLogin ? 'SIGNIN' : "SIGNUP"),
         backgroundColor: Colors.blueGrey[800],
+        brightness: Brightness.dark,
         centerTitle: true,
       ),
       body: Center(
@@ -62,7 +64,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     bool result = await user.loginToSystem(_email, _password,
                         isLoginT: _isLogin, nameT: _name);
                     if (!result) {
-                      print('failed to login!');
+                      ScaffoldMessenger.of(context).clearSnackBars();
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text((_isLogin)
+                              ? 'Failed to Login!, try again.'
+                              : 'Failed to Register!, try again.')));
                       setState(() {
                         _isLoading = false;
                       });

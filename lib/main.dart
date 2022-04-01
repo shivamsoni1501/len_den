@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:len_den/screens/add_people.dart';
 import 'package:len_den/screens/add_transaction.dart';
 import 'package:len_den/screens/home.dart';
@@ -9,6 +10,13 @@ import 'package:len_den/screens/people.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.blueGrey[800],
+    systemNavigationBarColor: Colors.blueGrey[800],
+    systemNavigationBarDividerColor: Colors.blueGrey[800],
+    statusBarIconBrightness: Brightness.light,
+  ));
+
   runApp(LenDenApp());
 }
 
@@ -58,6 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueGrey[800],
+        brightness: Brightness.dark,
         title: Text(
           'LEN-DEN',
           style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5),
@@ -94,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.account_circle,
+                leading: Icon(Icons.account_circle_rounded,
                     size: 32, color: Colors.blueGrey[800]),
                 title: Text(user.name,
                     style: TextStyle(
@@ -103,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         fontSize: 18)),
               ),
               ListTile(
-                leading: Icon(Icons.alternate_email_sharp,
+                leading: Icon(Icons.alternate_email_rounded,
                     size: 32, color: Colors.blueGrey[800]),
                 title: Text(user.email,
                     style: TextStyle(
@@ -112,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         fontSize: 18)),
               ),
               ListTile(
-                leading: Icon(Icons.health_and_safety_outlined,
+                leading: Icon(Icons.password_rounded,
                     size: 32, color: Colors.blueGrey[800]),
                 title: Text(user.password,
                     style: TextStyle(
@@ -162,7 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
           if ((cIndex == 0) && (user.people.length == 0)) {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
             ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text('First add venders!')));
+                .showSnackBar(SnackBar(content: Text('First, add venders!')));
           } else
             showModalBottomSheet(
                 context: context,
